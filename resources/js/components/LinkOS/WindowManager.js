@@ -103,10 +103,18 @@ class WindowManager {
             return null;
         }
         
-        // Calculate stacked position for new windows
-        const position = this.calculateNewWindowPosition(config.appId);
+        // Detect mobile device
+        const isMobile = this.isMobileDevice();
+        
+        // Calculate position (use 0,0 for mobile, smart positioning for desktop)
+        const position = isMobile 
+            ? { x: 0, y: 0 } 
+            : this.calculateNewWindowPosition(config.appId);
+        
+        // Merge config with mobile-specific settings
         const windowConfig = {
             position,
+            startMaximized: isMobile, // Auto-maximize on mobile
             ...config
         };
         
@@ -114,6 +122,23 @@ class WindowManager {
         this.registerWindow(window);
         
         return window;
+    }
+    
+    /**
+     * Detect if device is mobile
+     * @returns {boolean} True if mobile device
+     */
+    isMobileDevice() {
+        // Check viewport width (tablets and phones)
+        const mobileWidth = window.innerWidth <= 768;
+        
+        // Check user agent for mobile devices
+        const mobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
+        // Check touch capability
+        const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        
+        return mobileWidth || (mobileUA && hasTouch);
     }
 
     /**
@@ -260,20 +285,37 @@ class WindowManager {
 
     /**
      * Calculate position for new window
+     * Now viewport-aware to prevent windows spawning off-screen
      */
     calculateNewWindowPosition(appId) {
         const existingWindows = this.getWindowsByApp(appId);
-        const basePosition = { ...this.config.defaultPosition };
+        
+        // Get viewport dimensions
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        
+        // Typical window dimensions (can be overridden by window config)
+        const defaultWindowWidth = 800;
+        const defaultWindowHeight = 600;
+        
+        // Calculate safe margins (20px padding from edges)
+        const padding = 20;
+        const maxSafeX = Math.max(padding, viewportWidth - defaultWindowWidth - padding);
+        const maxSafeY = Math.max(padding, viewportHeight - defaultWindowHeight - 60); // 60px for dock
+        
+        // Start position based on viewport
+        const baseX = Math.max(padding, Math.min(this.config.defaultPosition.x, maxSafeX));
+        const baseY = Math.max(padding, Math.min(this.config.defaultPosition.y, maxSafeY));
         
         if (existingWindows.length === 0) {
-            return basePosition;
+            return { x: baseX, y: baseY };
         }
         
-        // Stack windows with offset
+        // Stack windows with offset, ensuring they stay within viewport
         const offset = existingWindows.length * this.config.stackSpacing;
         return {
-            x: basePosition.x + offset,
-            y: basePosition.y + offset
+            x: Math.min(baseX + offset, maxSafeX),
+            y: Math.min(baseY + offset, maxSafeY)
         };
     }
 

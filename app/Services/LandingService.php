@@ -58,7 +58,7 @@ class LandingService
             'tagline' => $aboutData['personal']['tagline'] ?? 'Building the future, one pixel at a time',
             'bio' => $aboutData['personal']['bio'] ?? '',
             'location' => $aboutData['personal']['location'] ?? 'Istanbul, Turkey',
-            'email' => $aboutData['personal']['email'] ?? 'hello@abdulme.link',
+            'email' => $aboutData['personal']['email'] ?? 'abdulmeliksaylan@gmail.com',
             'profileImage' => $aboutData['personal']['profileImage'] ?? '/images/abdulmelik_saylan.jpg',
             'social' => $aboutData['social'] ?? []
         ];
@@ -204,7 +204,7 @@ class LandingService
                 'tagline' => 'Building the future, one pixel at a time',
                 'bio' => 'Passionate developer creating innovative solutions',
                 'location' => 'Istanbul, Turkey',
-                'email' => 'hello@abdulme.link',
+                'email' => 'abdulmeliksaylan@gmail.com',
                 'profileImage' => '/images/abdulmelik_saylan.jpg',
                 'social' => []
             ],

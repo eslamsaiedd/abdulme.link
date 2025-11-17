@@ -37,20 +37,12 @@ class SupabaseStorageService
         $this->supabaseUrl = env('SUPABASE_URL');
         $this->supabaseKey = env('SUPABASE_SERVICE_KEY');
 
-        Log::debug('SupabaseStorageService: Initializing', [
-            'url_configured' => !empty($this->supabaseUrl),
-            'key_configured' => !empty($this->supabaseKey),
-            'bucket' => $this->bucketName
-        ]);
-
         if (!$this->supabaseUrl || !$this->supabaseKey) {
             Log::warning('SupabaseStorageService: Credentials not configured', [
                 'missing_url' => empty($this->supabaseUrl),
                 'missing_key' => empty($this->supabaseKey),
                 'will_use_local_fallback' => true
             ]);
-        } else {
-            Log::info('SupabaseStorageService: Credentials configured, Supabase Storage available');
         }
     }
 
@@ -62,7 +54,7 @@ class SupabaseStorageService
         $available = !empty($this->supabaseUrl) && !empty($this->supabaseKey);
 
         Log::debug('SupabaseStorageService: Availability check', [
-            'available' => $this->available
+            'available' => $available
         ]);
 
         return $available;

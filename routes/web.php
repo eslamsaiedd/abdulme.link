@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BootController;
 use App\Http\Controllers\DesktopController;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\SitemapController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +21,11 @@ use App\Http\Controllers\LandingController;
  * Desktop - Full LinkOS experience (default landing page)
  */
 Route::get('/', [DesktopController::class, 'index'])->name('desktop');
+
+/**
+ * SEO: Sitemap.xml for search engines
+ */
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 /**
  * Legacy landing page - redirect to desktop

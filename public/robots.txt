@@ -1,2 +1,45 @@
+# Robots.txt - Portfolio Website
+# Controls search engine crawling behavior
+
+# Default: Allow all crawlers to access all content
 User-agent: *
-Disallow:
+Allow: /
+
+# Disallow private and admin areas
+Disallow: /api/boot/
+Disallow: /api/preferences/
+Disallow: /_debugbar/
+Disallow: /storage/
+Disallow: /vendor/
+
+# Crawl-delay for good practice (1 second between requests)
+Crawl-delay: 1
+
+# Sitemap location (helps search engines find all pages)
+# Note: Update this URL to match your domain
+Sitemap: /sitemap.xml
+
+# Specific bot configurations (optional, inherits from User-agent: *)
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /

@@ -59,15 +59,15 @@ applyTo: "resources/views/about.blade.php", "resources/js/components/about/*.js"
 ```json
 {
   "profile": {
-    "name": "Abdulmelik Saylan", 
-    "title": "Full Stack Developer",
+    "name": "Your Name", 
+    "title": "Software Engineer",
     "bio": "Passionate developer...",
     "avatar": "profile.jpg",
     "status": "available"
   },
   "skills": [{
     "category": "Frontend",
-    "technologies": [{"name": "Vue.js", "level": 90}]
+    "technologies": [{"name": "Modern Framework", "level": 90}]
   }],
   "experience": [{
     "company": "Company Name",

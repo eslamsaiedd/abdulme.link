@@ -82,7 +82,7 @@ export default class Contact {
             // Use default contact info
             this.contactInfo = {
                 contact: {
-                    email: 'hello@abdulme.link',
+                    email: 'abdulmeliksaylan@gmail.com',
                     phone: '+90 555 123 4567',
                     location: 'Istanbul, Turkey',
                     responseTime: '24 hours'
