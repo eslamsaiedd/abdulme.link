@@ -1,33 +1,33 @@
 /**
  * Contact Application Component
- * 
+ *
  * Features:
  * - Contact form with real-time validation
  * - Auto-save drafts in localStorage
  * - Contact information cards
  * - Social media integration
  * - Success/error animations
- * 
+ *
  * @author AbdulmeLink Portfolio
  * @version 1.0.0
  */
 
-import EventBus from '../EventBus.js';
+import EventBus from "../EventBus.js";
 
 export default class Contact {
     constructor(container) {
         this.container = container;
         this.contactInfo = null;
         this.formData = {
-            name: '',
-            email: '',
-            subject: '',
-            message: ''
+            name: "",
+            email: "",
+            subject: "",
+            message: "",
         };
         this.validationErrors = {};
         this.isSubmitting = false;
         this.autoSaveTimer = null;
-        
+
         this.init();
     }
 
@@ -42,12 +42,11 @@ export default class Contact {
             this.createLayout();
             this.setupEventListeners();
             this.loadSavedDraft();
-            
-            EventBus.emit('contact:ready');
-            
+
+            EventBus.emit("contact:ready");
         } catch (error) {
-            console.error('Failed to initialize Contact:', error);
-            this.showError('Failed to load contact form. Please try again.');
+            console.error("Failed to initialize Contact:", error);
+            this.showError("Failed to load contact form. Please try again.");
         }
     }
 
@@ -55,7 +54,7 @@ export default class Contact {
      * Setup container with loading state
      */
     setupContainer() {
-        this.container.className = 'contact-app';
+        this.container.className = "contact-app";
         this.container.innerHTML = `
             <div class="contact-loading">
                 <div class="loading-spinner"></div>
@@ -69,25 +68,29 @@ export default class Contact {
      */
     async loadContactInfo() {
         try {
-            const response = await fetch('/api/contact');
+            const response = await fetch("/api/contact");
             const result = await response.json();
+            console.log(result);
             
+
             if (result.success) {
                 this.contactInfo = result.data;
             } else {
-                throw new Error(result.message || 'Failed to load contact info');
+                throw new Error(
+                    result.message || "Failed to load contact info"
+                );
             }
         } catch (error) {
-            console.error('Error loading contact info:', error);
+            console.error("Error loading contact info:", error);
             // Use default contact info
             this.contactInfo = {
                 contact: {
-                    email: 'hello@abdulme.link',
-                    phone: '+90 555 123 4567',
-                    location: 'Istanbul, Turkey',
-                    responseTime: '24 hours'
+                    email: "hello@abdulme.link",
+                    phone: "+90 555 123 4567",
+                    location: "Istanbul, Turkey",
+                    responseTime: "24 hours",
                 },
-                social: {}
+                social: {},
             };
         }
     }
@@ -215,54 +218,56 @@ export default class Contact {
      */
     createContactCards() {
         const contact = this.contactInfo.contact;
+        console.log("===============",contact);
         
         return `
-            <div class="contact-cards">
-                <h3>Contact Information</h3>
-                
-                <div class="contact-card" data-action="copy-email">
-                    <div class="card-icon">
-                        <i class="icon-email"></i>
+                <div class="contact-cards">
+                    <h3>Contact Information</h3>
+
+                    <div class="contact-card" data-action="copy-email">
+                        <div class="card-icon">
+                        <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="card-content">
+                            <h4>Email</h4>
+                            <p>${contact.email}</p>
+                            <span class="card-action">Click to copy</span>
+                        </div>
                     </div>
-                    <div class="card-content">
-                        <h4>Email</h4>
-                        <p>${contact.email}</p>
-                        <span class="card-action">Click to copy</span>
+
+                    <div class="contact-card">
+                        <div class="card-icon">
+                        <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div class="card-content">
+                            <h4>Phone</h4>
+                            <p>${contact.phone}</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-card">
+                        <div class="card-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="card-content">
+                            <h4>Location</h4>
+                            <p>${contact.location}</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-card">
+                        <div class="card-icon">
+                        <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="card-content">
+                            <h4>Response Time</h4>
+                            <p>Usually within ${contact.responseTime}</p>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="contact-card">
-                    <div class="card-icon">
-                        <i class="icon-phone"></i>
-                    </div>
-                    <div class="card-content">
-                        <h4>Phone</h4>
-                        <p>${contact.phone}</p>
-                    </div>
-                </div>
-                
-                <div class="contact-card">
-                    <div class="card-icon">
-                        <i class="icon-location"></i>
-                    </div>
-                    <div class="card-content">
-                        <h4>Location</h4>
-                        <p>${contact.location}</p>
-                    </div>
-                </div>
-                
-                <div class="contact-card">
-                    <div class="card-icon">
-                        <i class="icon-clock"></i>
-                    </div>
-                    <div class="card-content">
-                        <h4>Response Time</h4>
-                        <p>Usually within ${contact.responseTime}</p>
-                    </div>
-                </div>
-            </div>
         `;
     }
+    
 
     /**
      * Create social media links
@@ -270,19 +275,20 @@ export default class Contact {
     createSocialLinks() {
         const social = this.contactInfo.social;
         const platforms = [
-            { key: 'github', name: 'GitHub', icon: 'github' },
-            { key: 'linkedin', name: 'LinkedIn', icon: 'linkedin' },
-            { key: 'twitter', name: 'Twitter', icon: 'twitter' },
-            { key: 'dribbble', name: 'Dribbble', icon: 'dribbble' }
+            { key: "github", name: "GitHub", icon: "github" },
+            { key: "linkedin", name: "LinkedIn", icon: "linkedin" },
+            { key: "twitter", name: "Twitter", icon: "twitter" },
+            { key: "dribbble", name: "Dribbble", icon: "dribbble" },
         ];
-        
+
         return `
             <div class="social-section">
                 <h3>Connect With Me</h3>
                 <div class="social-links">
-                    ${platforms.map(platform => {
-                        if (!social[platform.key]) return '';
-                        return `
+                    ${platforms
+                        .map((platform) => {
+                            if (!social[platform.key]) return "";
+                            return `
                             <a href="${social[platform.key]}" 
                                class="social-link social-${platform.key}" 
                                target="_blank" 
@@ -292,7 +298,8 @@ export default class Contact {
                                 <span>${platform.name}</span>
                             </a>
                         `;
-                    }).join('')}
+                        })
+                        .join("")}
                 </div>
             </div>
         `;
@@ -302,45 +309,49 @@ export default class Contact {
      * Setup event listeners
      */
     setupEventListeners() {
-        const form = this.container.querySelector('#contactForm');
-        const clearBtn = this.container.querySelector('#clearBtn');
-        const inputs = this.container.querySelectorAll('.form-input, .form-textarea');
-        const messageInput = this.container.querySelector('#message');
-        
+        const form = this.container.querySelector("#contactForm");
+        const clearBtn = this.container.querySelector("#clearBtn");
+        const inputs = this.container.querySelectorAll(
+            ".form-input, .form-textarea"
+        );
+        const messageInput = this.container.querySelector("#message");
+
         // Form submission
         if (form) {
-            form.addEventListener('submit', (e) => this.handleSubmit(e));
+            form.addEventListener("submit", (e) => this.handleSubmit(e));
         }
-        
+
         // Clear button
         if (clearBtn) {
-            clearBtn.addEventListener('click', () => this.clearForm());
+            clearBtn.addEventListener("click", () => this.clearForm());
         }
-        
+
         // Real-time validation and auto-save
-        inputs.forEach(input => {
-            input.addEventListener('input', () => {
+        inputs.forEach((input) => {
+            input.addEventListener("input", () => {
                 this.handleInputChange(input);
                 this.scheduleAutoSave();
             });
-            
-            input.addEventListener('blur', () => {
+
+            input.addEventListener("blur", () => {
                 this.validateField(input.name);
             });
         });
-        
+
         // Character count for message
         if (messageInput) {
-            messageInput.addEventListener('input', () => {
+            messageInput.addEventListener("input", () => {
                 this.updateCharacterCount();
             });
             this.updateCharacterCount();
         }
-        
+
         // Copy email functionality
-        const copyEmailCard = this.container.querySelector('[data-action="copy-email"]');
+        const copyEmailCard = this.container.querySelector(
+            '[data-action="copy-email"]'
+        );
         if (copyEmailCard) {
-            copyEmailCard.addEventListener('click', () => this.copyEmail());
+            copyEmailCard.addEventListener("click", () => this.copyEmail());
         }
     }
 
@@ -349,7 +360,7 @@ export default class Contact {
      */
     handleInputChange(input) {
         this.formData[input.name] = input.value;
-        
+
         // Clear error when user starts typing
         if (this.validationErrors[input.name]) {
             delete this.validationErrors[input.name];
@@ -361,26 +372,34 @@ export default class Contact {
      * Validate single field
      */
     validateField(fieldName) {
-        const value = this.formData[fieldName] || '';
+        const value = this.formData[fieldName] || "";
         const rules = {
-            name: { min: 2, message: 'Name must be at least 2 characters' },
-            email: { 
-                pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, 
-                message: 'Please enter a valid email address' 
+            name: { min: 2, message: "Name must be at least 2 characters" },
+            email: {
+                pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "Please enter a valid email address",
             },
-            subject: { min: 5, message: 'Subject must be at least 5 characters' },
-            message: { min: 20, message: 'Message must be at least 20 characters' }
+            subject: {
+                min: 5,
+                message: "Subject must be at least 5 characters",
+            },
+            message: {
+                min: 20,
+                message: "Message must be at least 20 characters",
+            },
         };
-        
+
         const rule = rules[fieldName];
         if (!rule) return true;
-        
+
         let isValid = true;
-        let error = '';
-        
+        let error = "";
+
         if (!value.trim()) {
             isValid = false;
-            error = `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} is required`;
+            error = `${
+                fieldName.charAt(0).toUpperCase() + fieldName.slice(1)
+            } is required`;
         } else if (rule.min && value.length < rule.min) {
             isValid = false;
             error = rule.message;
@@ -388,7 +407,7 @@ export default class Contact {
             isValid = false;
             error = rule.message;
         }
-        
+
         if (!isValid) {
             this.validationErrors[fieldName] = error;
             this.showFieldError(fieldName, error);
@@ -396,7 +415,7 @@ export default class Contact {
             delete this.validationErrors[fieldName];
             this.clearFieldError(fieldName);
         }
-        
+
         return isValid;
     }
 
@@ -404,16 +423,20 @@ export default class Contact {
      * Show field error
      */
     showFieldError(fieldName, message) {
-        const errorElement = this.container.querySelector(`[data-field="${fieldName}"]`);
-        const inputElement = this.container.querySelector(`[name="${fieldName}"]`);
-        
+        const errorElement = this.container.querySelector(
+            `[data-field="${fieldName}"]`
+        );
+        const inputElement = this.container.querySelector(
+            `[name="${fieldName}"]`
+        );
+
         if (errorElement) {
             errorElement.textContent = message;
-            errorElement.style.display = 'block';
+            errorElement.style.display = "block";
         }
-        
+
         if (inputElement) {
-            inputElement.classList.add('error');
+            inputElement.classList.add("error");
         }
     }
 
@@ -421,16 +444,20 @@ export default class Contact {
      * Clear field error
      */
     clearFieldError(fieldName) {
-        const errorElement = this.container.querySelector(`[data-field="${fieldName}"]`);
-        const inputElement = this.container.querySelector(`[name="${fieldName}"]`);
-        
+        const errorElement = this.container.querySelector(
+            `[data-field="${fieldName}"]`
+        );
+        const inputElement = this.container.querySelector(
+            `[name="${fieldName}"]`
+        );
+
         if (errorElement) {
-            errorElement.textContent = '';
-            errorElement.style.display = 'none';
+            errorElement.textContent = "";
+            errorElement.style.display = "none";
         }
-        
+
         if (inputElement) {
-            inputElement.classList.remove('error');
+            inputElement.classList.remove("error");
         }
     }
 
@@ -438,17 +465,19 @@ export default class Contact {
      * Update character count
      */
     updateCharacterCount() {
-        const messageInput = this.container.querySelector('#message');
-        const countElement = this.container.querySelector('.character-count .current');
-        
+        const messageInput = this.container.querySelector("#message");
+        const countElement = this.container.querySelector(
+            ".character-count .current"
+        );
+
         if (messageInput && countElement) {
             const length = messageInput.value.length;
             countElement.textContent = length;
-            
+
             if (length > 1000) {
-                countElement.parentElement.classList.add('over-limit');
+                countElement.parentElement.classList.add("over-limit");
             } else {
-                countElement.parentElement.classList.remove('over-limit');
+                countElement.parentElement.classList.remove("over-limit");
             }
         }
     }
@@ -458,51 +487,59 @@ export default class Contact {
      */
     async handleSubmit(e) {
         e.preventDefault();
-        
+
         if (this.isSubmitting) return;
-        
+
         // Validate all fields
-        const fields = ['name', 'email', 'subject', 'message'];
+        const fields = ["name", "email", "subject", "message"];
         let isValid = true;
-        
-        fields.forEach(field => {
+
+        fields.forEach((field) => {
             if (!this.validateField(field)) {
                 isValid = false;
             }
         });
-        
+
         if (!isValid) {
-            this.showNotification('Please fix the errors before submitting', 'error');
+            this.showNotification(
+                "Please fix the errors before submitting",
+                "error"
+            );
             return;
         }
-        
+
         this.isSubmitting = true;
         this.updateSubmitButton(true);
-        
+
         try {
-            const response = await fetch('/api/contact/submit', {
-                method: 'POST',
+            const response = await fetch("/api/contact/submit", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
+                    "Content-Type": "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
                 },
-                body: JSON.stringify(this.formData)
+                body: JSON.stringify(this.formData),
             });
-            
+
             const result = await response.json();
-            
+
             if (result.success) {
                 this.showSuccess(result.message);
                 this.clearForm();
                 this.clearDraft();
-                EventBus.emit('contact:submitted', this.formData);
+                EventBus.emit("contact:submitted", this.formData);
             } else {
-                this.showNotification(result.message || 'Failed to send message', 'error');
+                this.showNotification(
+                    result.message || "Failed to send message",
+                    "error"
+                );
             }
-            
         } catch (error) {
-            console.error('Form submission error:', error);
-            this.showNotification('Failed to send message. Please try again.', 'error');
+            console.error("Form submission error:", error);
+            this.showNotification(
+                "Failed to send message. Please try again.",
+                "error"
+            );
         } finally {
             this.isSubmitting = false;
             this.updateSubmitButton(false);
@@ -513,15 +550,16 @@ export default class Contact {
      * Update submit button state
      */
     updateSubmitButton(isLoading) {
-        const submitBtn = this.container.querySelector('#submitBtn');
-        const btnText = submitBtn?.querySelector('.btn-text');
-        const btnSpinner = submitBtn?.querySelector('.btn-spinner');
-        
+        const submitBtn = this.container.querySelector("#submitBtn");
+        const btnText = submitBtn?.querySelector(".btn-text");
+        const btnSpinner = submitBtn?.querySelector(".btn-spinner");
+
         if (submitBtn) {
             submitBtn.disabled = isLoading;
-            
-            if (btnText) btnText.style.display = isLoading ? 'none' : 'inline';
-            if (btnSpinner) btnSpinner.style.display = isLoading ? 'inline-flex' : 'none';
+
+            if (btnText) btnText.style.display = isLoading ? "none" : "inline";
+            if (btnSpinner)
+                btnSpinner.style.display = isLoading ? "inline-flex" : "none";
         }
     }
 
@@ -530,17 +568,17 @@ export default class Contact {
      */
     clearForm() {
         this.formData = {
-            name: '',
-            email: '',
-            subject: '',
-            message: ''
+            name: "",
+            email: "",
+            subject: "",
+            message: "",
         };
-        
-        const form = this.container.querySelector('#contactForm');
+
+        const form = this.container.querySelector("#contactForm");
         if (form) {
             form.reset();
         }
-        
+
         this.validationErrors = {};
         this.updateCharacterCount();
         this.clearDraft();
@@ -551,14 +589,14 @@ export default class Contact {
      */
     async copyEmail() {
         const email = this.contactInfo.contact.email;
-        
+
         try {
             await navigator.clipboard.writeText(email);
-            this.showNotification('Email copied to clipboard!', 'success');
-            EventBus.emit('contact:emailCopied', { email });
+            this.showNotification("Email copied to clipboard!", "success");
+            EventBus.emit("contact:emailCopied", { email });
         } catch (error) {
-            console.error('Failed to copy email:', error);
-            this.showNotification('Failed to copy email', 'error');
+            console.error("Failed to copy email:", error);
+            this.showNotification("Failed to copy email", "error");
         }
     }
 
@@ -567,13 +605,13 @@ export default class Contact {
      */
     loadDraft() {
         try {
-            const draft = localStorage.getItem('contact_draft');
+            const draft = localStorage.getItem("contact_draft");
             if (draft) {
                 const parsed = JSON.parse(draft);
                 this.formData = { ...this.formData, ...parsed };
             }
         } catch (error) {
-            console.error('Failed to load draft:', error);
+            console.error("Failed to load draft:", error);
         }
     }
 
@@ -581,13 +619,13 @@ export default class Contact {
      * Load saved draft into form fields
      */
     loadSavedDraft() {
-        Object.keys(this.formData).forEach(key => {
+        Object.keys(this.formData).forEach((key) => {
             const input = this.container.querySelector(`[name="${key}"]`);
             if (input && this.formData[key]) {
                 input.value = this.formData[key];
             }
         });
-        
+
         this.updateCharacterCount();
     }
 
@@ -598,7 +636,7 @@ export default class Contact {
         if (this.autoSaveTimer) {
             clearTimeout(this.autoSaveTimer);
         }
-        
+
         this.autoSaveTimer = setTimeout(() => {
             this.saveDraft();
         }, 1000);
@@ -609,9 +647,12 @@ export default class Contact {
      */
     saveDraft() {
         try {
-            localStorage.setItem('contact_draft', JSON.stringify(this.formData));
+            localStorage.setItem(
+                "contact_draft",
+                JSON.stringify(this.formData)
+            );
         } catch (error) {
-            console.error('Failed to save draft:', error);
+            console.error("Failed to save draft:", error);
         }
     }
 
@@ -620,9 +661,9 @@ export default class Contact {
      */
     clearDraft() {
         try {
-            localStorage.removeItem('contact_draft');
+            localStorage.removeItem("contact_draft");
         } catch (error) {
-            console.error('Failed to clear draft:', error);
+            console.error("Failed to clear draft:", error);
         }
     }
 
@@ -630,19 +671,21 @@ export default class Contact {
      * Show success message
      */
     showSuccess(message) {
-        const successDiv = document.createElement('div');
-        successDiv.className = 'form-success-message';
+        const successDiv = document.createElement("div");
+        successDiv.className = "form-success-message";
         successDiv.innerHTML = `
             <div class="success-icon">✓</div>
             <h3>Message Sent!</h3>
             <p>${message}</p>
         `;
-        
-        const formWrapper = this.container.querySelector('.contact-form-wrapper');
+
+        const formWrapper = this.container.querySelector(
+            ".contact-form-wrapper"
+        );
         if (formWrapper) {
-            formWrapper.innerHTML = '';
+            formWrapper.innerHTML = "";
             formWrapper.appendChild(successDiv);
-            
+
             // Reset form after 5 seconds
             setTimeout(() => {
                 this.createLayout();
@@ -654,19 +697,19 @@ export default class Contact {
     /**
      * Show notification
      */
-    showNotification(message, type = 'info') {
-        const notification = document.createElement('div');
+    showNotification(message, type = "info") {
+        const notification = document.createElement("div");
         notification.className = `contact-notification notification-${type}`;
         notification.textContent = message;
-        
+
         this.container.appendChild(notification);
-        
+
         setTimeout(() => {
-            notification.classList.add('show');
+            notification.classList.add("show");
         }, 10);
-        
+
         setTimeout(() => {
-            notification.classList.remove('show');
+            notification.classList.remove("show");
             setTimeout(() => notification.remove(), 300);
         }, 3000);
     }
@@ -690,18 +733,18 @@ export default class Contact {
      */
     destroy() {
         // Save draft before destroying
-        if (Object.values(this.formData).some(v => v)) {
+        if (Object.values(this.formData).some((v) => v)) {
             this.saveDraft();
         }
-        
+
         // Clear timers
         if (this.autoSaveTimer) {
             clearTimeout(this.autoSaveTimer);
         }
-        
+
         // Clear container
-        this.container.innerHTML = '';
-        
-        EventBus.emit('contact:destroyed');
+        this.container.innerHTML = "";
+
+        EventBus.emit("contact:destroyed");
     }
 }

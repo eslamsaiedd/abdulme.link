@@ -777,70 +777,114 @@ class App {
     /**
      * Create contact window
      */
+    // createContactWindow() {
+    //     if (!this.windowManager) {
+    //         console.warn('WindowManager not initialized yet');
+    //         return;
+    //     }
+        
+    //     // Check if contact window already exists
+    //     const existingWindows = this.windowManager.getWindowsByApp('contact');
+    //     if (existingWindows.length > 0) {
+    //         const firstWindow = existingWindows[0];
+    //         if (firstWindow.isMinimized) {
+    //             firstWindow.restore();
+    //         } else {
+    //             this.windowManager.focusWindow(firstWindow.id);
+    //         }
+    //         return;
+    //     }
+        
+    //     // Create contact container
+    //     const contactContainer = document.createElement('div');
+    //     contactContainer.className = 'contact-container-wrapper';
+    //     contactContainer.style.cssText = `
+    //         width: 100%;
+    //         height: 100%;
+    //         background: #ffffff;
+    //         overflow: hidden;
+    //     `;
+        
+    //     // Create contact instance
+    //     const contact = new Contact(contactContainer);
+        
+    //     const window = this.windowManager.createWindow({
+    //         appId: 'contact',
+    //         title: 'Contact Me',
+    //         content: contactContainer,
+    //         size: { width: 1000, height: 700 },
+    //         position: { x: 250, y: 100 },
+    //         minSize: { width: 800, height: 600 },
+    //         resizable: true
+    //     });
+        
+    //     if (window) {
+    //         window.show();
+            
+    //         // Setup window-specific event handlers
+    //         window.onResize = () => {
+    //             EventBus.emit('contact:window-resized', {
+    //                 windowId: window.id,
+    //                 size: window.getSize()
+    //             });
+    //         };
+            
+    //         window.onClose = () => {
+    //             // Cleanup contact component
+    //             if (contact && typeof contact.destroy === 'function') {
+    //                 contact.destroy();
+    //             }
+    //         };
+            
+    //         console.log('Contact window created:', window.id);
+    //     }
+        
+    //     return window;
+    // }    
+
+
     createContactWindow() {
-        if (!this.windowManager) {
-            console.warn('WindowManager not initialized yet');
-            return;
-        }
-        
-        // Check if contact window already exists
-        const existingWindows = this.windowManager.getWindowsByApp('contact');
-        if (existingWindows.length > 0) {
-            const firstWindow = existingWindows[0];
-            if (firstWindow.isMinimized) {
-                firstWindow.restore();
-            } else {
-                this.windowManager.focusWindow(firstWindow.id);
-            }
-            return;
-        }
-        
-        // Create contact container
-        const contactContainer = document.createElement('div');
-        contactContainer.className = 'contact-container-wrapper';
-        contactContainer.style.cssText = `
-            width: 100%;
-            height: 100%;
-            background: #ffffff;
-            overflow: hidden;
-        `;
-        
-        // Create contact instance
-        const contact = new Contact(contactContainer);
-        
-        const window = this.windowManager.createWindow({
-            appId: 'contact',
-            title: 'Contact Me',
-            content: contactContainer,
-            size: { width: 1000, height: 700 },
-            position: { x: 250, y: 100 },
-            minSize: { width: 800, height: 600 },
-            resizable: true
-        });
-        
-        if (window) {
-            window.show();
-            
-            // Setup window-specific event handlers
-            window.onResize = () => {
-                EventBus.emit('contact:window-resized', {
-                    windowId: window.id,
-                    size: window.getSize()
-                });
-            };
-            
-            window.onClose = () => {
-                // Cleanup contact component
-                if (contact && typeof contact.destroy === 'function') {
-                    contact.destroy();
-                }
-            };
-            
-            console.log('Contact window created:', window.id);
-        }
-        
-        return window;
+    if (!this.windowManager) {
+        console.warn('WindowManager not initialized yet');
+        return;
     }
+
+    // 1. 🖼️ إنشاء حاوية مخصصة جديدة لـ Contact
+    var contactContainer = document.createElement('div');
+    contactContainer.className = 'contact-container-wrapper';
+    contactContainer.style.cssText = `
+        width: 100%;
+        height: 100%;
+        background: var(--window-background); // لضمان المسح
+        overflow: auto;
+    `;
+
+    // 2. 🔌 إنشاء مثيل Contact وتمرير الحاوية الجديدة
+    var contact = new Contact(contactContainer);
+    
+    // 3. 🪟 إنشاء النافذة عبر WindowManager
+    var window = this.windowManager.createWindow({
+        appId: 'contact',
+        title: 'Contact Me',
+        content: contactContainer, // 👈 **الحاوية الجديدة التي سيتم التحكم فيها**
+        size: { width: 900, height: 650 },
+        position: { x: 200, y: 150 },
+        minSize: { width: 500, height: 400 },
+        resizable: true,
+        maximizable: false
+    });
+
+    if (window) {
+        window.show();
+        
+        // 4. 🚀 استدعاء دالة init لـ Contact.js لتبدأ عملية الرسم
+        // هذا الاستدعاء هو الذي سيبدأ cycle التهيئة والرسم
+        contact.init(); 
+
+        console.log('Contact window created:', window.id);
+    }
+    return window;
+}
 
     /**
      * Create preferences window

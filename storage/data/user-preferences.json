@@ -1,13 +1,13 @@
 {
     "desktop": {
         "wallpaper": {
-            "current_id": "sonoma-light",
-            "last_updated": "2025-10-30T10:43:17.200305Z"
+            "current_id": "big-sur",
+            "last_updated": "2025-11-17T21:34:17.487370Z"
         }
     },
     "_metadata": {
-        "source": "supabase",
-        "timestamp": "2025-10-30T10:43:17+00:00",
-        "cached": false
+        "source": "local",
+        "timestamp": "2025-11-17T21:34:17+00:00",
+        "file_path": "C:\\Users\\LENOVOO\\Documents\\coding\\abdulme.link\\storage\\data/user-preferences.json"
     }
 }
