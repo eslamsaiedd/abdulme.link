@@ -840,9 +840,7 @@ class App {
         }
         
         return window;
-    }    
-
-
+    }
 
     /**
      * Create preferences window
