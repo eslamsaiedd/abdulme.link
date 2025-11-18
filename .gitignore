@@ -21,3 +21,6 @@ yarn-error.log
 /.idea
 /.vscode
 abdulme.link.yml
+
+# Issue investigations (internal development notes)
+.github/issue-investigations/

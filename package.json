@@ -1,4 +1,9 @@
 {
+    "name": "abdulme-link-portfolio",
+    "version": "1.0.0",
+    "description": "Interactive macOS-style portfolio by Abdulmelik Saylan",
+    "license": "MIT",
+    "author": "Abdulmelik Saylan <abdulmeliksaylan@gmail.com>",
     "private": true,
     "scripts": {
         "dev": "npm run development",

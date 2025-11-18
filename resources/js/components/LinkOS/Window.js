@@ -27,6 +27,9 @@ class Window {
         this.isFocused = false;
         this.zIndex = Window.getNextZIndex();
         
+        // Mobile/startup settings
+        this.startMaximized = config.startMaximized || false;
+        
         // DOM elements
         this.element = null;
         this.titleBar = null;
@@ -60,6 +63,14 @@ class Window {
         this.createElement();
         this.setupEventListeners();
         this.setupKeyboardShortcuts();
+        
+        // Auto-maximize if requested (e.g., for mobile devices)
+        if (this.startMaximized) {
+            // Wait for element to be added to DOM
+            setTimeout(() => {
+                this.maximize();
+            }, 50);
+        }
         
         // Register window with manager
         EventBus.emit('window:created', {

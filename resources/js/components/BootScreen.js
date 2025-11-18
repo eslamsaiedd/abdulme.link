@@ -13,9 +13,13 @@ class LinkOSBootScreen {
         this.loadingMessages = config.loadingMessages ?? [];
         this.currentWallpaper = config.currentWallpaper ?? null;
         
-        // Use backend timing configuration
-        this.duration = this.bootConfig.duration || (this.isFirstVisit ? 4500 : 1200);
+        // Use backend timing configuration with improved return visitor duration
+        // Increased from 1200ms to 2500ms for better message readability
+        this.duration = this.bootConfig.duration || (this.isFirstVisit ? 4500 : 2500);
         this.messages = this.getBootMessages();
+        
+        // Minimum message duration for readability (300ms per message)
+        this.MIN_MESSAGE_DURATION = 300;
         
         // DOM elements
         this.container = config.container || document.querySelector('.boot-screen-container');
@@ -182,58 +186,43 @@ class LinkOSBootScreen {
     }
     
     getBootMessages() {
+        // Get personal touches from loading messages data
+        const personalTouches = this.loadingMessages?.personal_touches || [
+            "Fun fact: I don't have any Apple device!",
+            "Tip: Try right-clicking the desktop",
+            "Easter egg: Type 'theme alien' in terminal",
+            "Fact: LinkOS was inspired by macOS!",
+            "Hint: Check out the games in the terminal"
+        ];
+        
+        let messages = [];
+        
         // Use backend messages if available
         if (this.loadingMessages && this.loadingMessages.boot_sequence) {
             // Combine messages from different boot stages
-            const bootMessages = [
+            messages = [
                 'LinkOS',
                 ...this.loadingMessages.boot_sequence.initial,
                 ...this.loadingMessages.boot_sequence.components,
                 ...this.loadingMessages.boot_sequence.wallpapers,
                 ...this.loadingMessages.boot_sequence.finalizing
             ].filter(msg => msg.trim() !== ''); // Remove empty messages
-            
-            return bootMessages;
+        } else {
+            // Default LinkOS messages
+            messages = [
+                'LinkOS',
+                'Loading essential services...',
+                'Initializing security framework...',
+                'Starting system services...',
+                'Loading user preferences...',
+                'Preparing desktop environment...'
+            ];
         }
 
-        // Get personal touches from loading messages data
-        const personalTouches = this.loadingMessages?.personal_touches || [
-            "Fun fact: I don't have any Apple Device!",
-            "Tip: Try right-clicking the desktop",
-            "Easter egg: Type 'theme alien' in terminal",
-            "Fact: LinkOS was inspired by macOS!",
-            "Hint: Check out the games in the terminal"
-        ];
-
-        // Default LinkOS messages with personal touches
-        const defaultMessages = [
-            'LinkOS',
-            'Loading essential services...',
-            'Initializing security framework...',
-            'Starting system services...',
-            'Loading user preferences...',
-            'Preparing desktop environment...'
-        ];
-
-        // Randomly insert 1-2 personal touches
-        const messages = [...defaultMessages];
-        const numPersonalTouches = Math.min(2, personalTouches.length);
-        const selectedTouches = [];
-
-        // Select random personal touches
-        while (selectedTouches.length < numPersonalTouches) {
-            const randomIndex = Math.floor(Math.random() * personalTouches.length);
-            const touch = personalTouches[randomIndex];
-            if (!selectedTouches.includes(touch)) {
-                selectedTouches.push(touch);
-            }
-        }
-
-        // Insert personal touches at random positions (not first or last)
-        selectedTouches.forEach(touch => {
-            const insertPosition = Math.floor(Math.random() * (messages.length - 2)) + 1;
-            messages.splice(insertPosition, 0, touch);
-        });
+        // Always add ONE random personal touch as the FINAL message
+        const randomIndex = Math.floor(Math.random() * personalTouches.length);
+        const finalPersonalTouch = personalTouches[randomIndex];
+        messages.push(finalPersonalTouch);
 
         return messages;
     }
@@ -323,19 +312,32 @@ class LinkOSBootScreen {
     }
     
     startMessageUpdates() {
-        const messageTimings = [
-            { delay: 0 },
-            { delay: this.duration * 0.2 },
-            { delay: this.duration * 0.4 },
-            { delay: this.duration * 0.7 },
-            { delay: this.duration * 0.9 }
-        ];
+        // Calculate message interval with minimum duration enforcement
+        const idealInterval = this.duration / Math.max(this.messages.length, 1);
+        const messageInterval = Math.max(idealInterval, this.MIN_MESSAGE_DURATION);
         
+        // If messages need more time, extend boot duration
+        const requiredDuration = messageInterval * this.messages.length;
+        if (requiredDuration > this.duration) {
+            console.log(`Extending boot duration from ${this.duration}ms to ${requiredDuration}ms for message readability`);
+            this.duration = requiredDuration;
+        }
+        
+        // Distribute messages evenly across the boot duration
+        const messageTimings = [];
+        for (let i = 0; i < this.messages.length; i++) {
+            messageTimings.push({ delay: i * messageInterval });
+        }
+        
+        // Show messages at calculated intervals
         messageTimings.forEach((timing, index) => {
             if (index < this.messages.length) {
                 setTimeout(() => this.updateMessage(this.messages[index]), timing.delay);
             }
         });
+        
+        // Store last message for persistence after boot complete
+        this.lastMessage = this.messages[this.messages.length - 1];
     }
     
     updateMessage(message) {
@@ -366,9 +368,48 @@ class LinkOSBootScreen {
         // Wait a moment then show the Enter Desktop button
         setTimeout(() => {
             this.showEnterDesktopButton();
-            const personalTouch = this.getRandomPersonalTouch();
-            this.updateMessage(personalTouch);
+            
+            // Persist the last message that was shown in boot complete section
+            // Don't update the message display - just persist what's already there
+            if (this.lastMessage) {
+                this.addPersistentMessage(this.lastMessage);
+            }
         }, 1500);
+    }
+    
+    /**
+     * Add persistent message to boot complete section
+     */
+    addPersistentMessage(message) {
+        if (!this.bootCompleteSection || !message) return;
+        
+        // Check if message element already exists
+        let messageDisplay = this.bootCompleteSection.querySelector('.boot-complete-message');
+        
+        if (!messageDisplay) {
+            // Create new message element
+            messageDisplay = document.createElement('p');
+            messageDisplay.className = 'boot-complete-message';
+            
+            // Insert before button
+            const button = this.bootCompleteSection.querySelector('#enterDesktopBtn');
+            if (button) {
+                this.bootCompleteSection.insertBefore(messageDisplay, button);
+            } else {
+                this.bootCompleteSection.appendChild(messageDisplay);
+            }
+        }
+        
+        // Update message text
+        messageDisplay.textContent = message;
+        messageDisplay.style.opacity = '0';
+        messageDisplay.style.transform = 'translateY(-10px)';
+        
+        // Animate in
+        setTimeout(() => {
+            messageDisplay.style.opacity = '1';
+            messageDisplay.style.transform = 'translateY(0)';
+        }, 200);
     }
     
     /**
@@ -485,7 +526,7 @@ class LinkOSBootScreen {
     getRandomPersonalTouch() {
         // Get personal touches from loading messages data
         const personalTouches = this.loadingMessages?.personal_touches || [
-            "Fun fact: I don't have any Apple Device!",
+            "Fun fact: I don't have any Apple device!",
             "Tip: Try right-clicking the desktop",
             "Easter egg: Type 'theme alien' in terminal",
             "Fact: LinkOS was inspired by macOS!",

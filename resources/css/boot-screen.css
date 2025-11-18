@@ -87,19 +87,22 @@
 /* Profile photo section */
 .profile-section {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     opacity: 0;
     animation: profileAppear 1.5s ease-out 0.8s forwards;
 }
 
 .profile-image-container {
     position: relative;
-    width: 120px;
-    height: 120px;
+    width: 140px;
+    height: 140px;
 }
 
 .profile-image {
-    width: 120px;
-    height: 120px;
+    width: 140px;
+    height: 140px;
     border-radius: 50%;
     opacity: 1;
     object-fit: cover;
@@ -147,6 +150,53 @@
         opacity: 0.6; 
         transform: scale(1.05);
     }
+}
+
+/* Profile Social Links - Horizontal under headshot */
+.profile-social-links {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 14px;
+    animation: fadeIn 0.6s ease-out 1.8s both;
+}
+
+.profile-social-links .social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.75);
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 36px;
+    height: 36px;
+}
+
+.profile-social-links .social-link:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.profile-social-links .social-link:active {
+    transform: translateY(0);
+}
+
+.profile-social-links .social-icon {
+    width: 18px;
+    height: 18px;
+    opacity: 0.85;
+}
+
+.profile-social-links .social-link span {
+    display: none;
 }
 
 /* Progress bar - LinkOS style */
@@ -237,8 +287,24 @@
 @media (max-width: 768px) {
     .profile-image-container,
     .profile-image {
-        width: 90px;
-        height: 90px;
+        width: 110px;
+        height: 110px;
+    }
+    
+    .profile-social-links {
+        gap: 8px;
+        margin-top: 12px;
+    }
+    
+    .profile-social-links .social-link {
+        width: 32px;
+        height: 32px;
+        padding: 6px;
+    }
+    
+    .profile-social-links .social-icon {
+        width: 16px;
+        height: 16px;
     }
     
     .boot-progress-section {
@@ -253,8 +319,19 @@
 @media (max-width: 480px) {
     .profile-image-container,
     .profile-image {
-        width: 70px;
-        height: 70px;
+        width: 90px;
+        height: 90px;
+    }
+    
+    .profile-social-links .social-link {
+        width: 28px;
+        height: 28px;
+        padding: 5px;
+    }
+    
+    .profile-social-links .social-icon {
+        width: 14px;
+        height: 14px;
     }
     
     .boot-progress-section {
@@ -570,4 +647,88 @@
         padding: 12px 28px;
         font-size: 14px;
     }
+    
+    .boot-professional-info {
+        margin-bottom: 20px;
+    }
+    
+    .professional-title {
+        font-size: 16px;
+    }
+    
+    .professional-tagline {
+        font-size: 11px;
+    }
+    
+    .open-source-link {
+        font-size: 10px;
+    }
 }
+
+/* Professional Info Styles */
+.boot-professional-info {
+    text-align: center;
+    margin-bottom: 28px;
+    animation: fadeIn 0.6s ease-out;
+}
+
+.professional-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+}
+
+.professional-tagline {
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 0.01em;
+}
+
+/* Boot Complete Persistent Message */
+.boot-complete-message {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0 0 24px 0;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+}
+
+/* Simple Open Source Footer */
+.boot-footer-simple {
+    text-align: center;
+    margin-top: auto;
+    padding-top: 24px;
+    animation: fadeIn 0.6s ease-out 2.5s both;
+}
+
+.open-source-link {
+    color: rgba(255, 255, 255, 0.35);
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    transition: color 0.2s ease;
+}
+
+.open-source-link:hover {
+    color: rgba(255, 255, 255, 0.55);
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+

@@ -65,8 +65,8 @@ class DesktopController extends Controller
             
             // Prepare view data
             $viewData = [
-                'title' => 'AbdulmeLink - LinkOS Desktop Portfolio',
-                'description' => 'Experience an authentic LinkOS desktop with my portfolio. Built with Laravel and vanilla JavaScript featuring 60fps animations, authentic behaviors, and progressive enhancement.',
+                'title' => config('seo.meta.title'),
+                'description' => config('seo.meta.description'),
                 'bootConfig' => $bootConfig,
                 'currentWallpaper' => $currentWallpaper,
                 'loadingMessages' => $loadingMessages,

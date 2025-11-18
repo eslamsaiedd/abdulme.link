@@ -1,9 +1,17 @@
 {
-    "name": "laravel/laravel",
+    "name": "abdulmelink/portfolio",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "description": "Interactive macOS-style portfolio by Abdulmelik Saylan - Built with Laravel and authentic Apple UI/UX",
+    "keywords": ["laravel", "framework", "portfolio", "macos", "interactive", "terminal"],
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Abdulmelik Saylan",
+            "email": "abdulmeliksaylan@gmail.com",
+            "homepage": "https://abdulme.link",
+            "role": "Developer"
+        }
+    ],
     "require": {
         "php": "^8.1",
         "google/recaptcha": "^1.3",

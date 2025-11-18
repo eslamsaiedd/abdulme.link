@@ -82,7 +82,7 @@ export default class Contact {
             // Use default contact info
             this.contactInfo = {
                 contact: {
-                    email: 'hello@abdulme.link',
+                    email: 'abdulmeliksaylan@gmail.com',
                     phone: '+90 555 123 4567',
                     location: 'Istanbul, Turkey',
                     responseTime: '24 hours'
@@ -222,7 +222,7 @@ export default class Contact {
                 
                 <div class="contact-card" data-action="copy-email">
                     <div class="card-icon">
-                        <i class="icon-email"></i>
+                        <i class="fas fa-envelope"></i>
                     </div>
                     <div class="card-content">
                         <h4>Email</h4>
@@ -233,7 +233,7 @@ export default class Contact {
                 
                 <div class="contact-card">
                     <div class="card-icon">
-                        <i class="icon-phone"></i>
+                        <i class="fas fa-phone-alt"></i>
                     </div>
                     <div class="card-content">
                         <h4>Phone</h4>
@@ -243,7 +243,7 @@ export default class Contact {
                 
                 <div class="contact-card">
                     <div class="card-icon">
-                        <i class="icon-location"></i>
+                        <i class="fas fa-map-marker-alt"></i>
                     </div>
                     <div class="card-content">
                         <h4>Location</h4>
@@ -253,7 +253,7 @@ export default class Contact {
                 
                 <div class="contact-card">
                     <div class="card-icon">
-                        <i class="icon-clock"></i>
+                        <i class="fas fa-clock"></i>
                     </div>
                     <div class="card-content">
                         <h4>Response Time</h4>

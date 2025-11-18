@@ -1,35 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" prefix="og: https://ogp.me/ns#">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     
-    <!-- SEO Meta Tags -->
-    <title>{{ $seo['title'] ?? 'Abdulmelik Saylan - Full-Stack Developer' }}</title>
-    <meta name="description" content="{{ $seo['description'] ?? 'Portfolio of a full-stack developer specializing in modern web applications' }}">
-    <meta name="keywords" content="{{ $seo['keywords'] ?? 'full-stack developer, web development, portfolio' }}">
-    <meta name="author" content="{{ $seo['author'] ?? 'Abdulmelik Saylan' }}">
-    <meta name="robots" content="index, follow">
-    <meta name="googlebot" content="index, follow">
+    <!-- Primary SEO Meta Tags -->
+    <title>{{ $seo['title'] ?? config('seo.meta.title') }}</title>
+    <meta name="title" content="{{ $seo['title'] ?? config('seo.meta.title') }}">
+    <meta name="description" content="{{ $seo['description'] ?? config('seo.meta.description') }}">
+    <meta name="keywords" content="{{ $seo['keywords'] ?? config('seo.meta.keywords') }}">
+    <meta name="author" content="{{ $seo['author'] ?? config('seo.meta.author') }}">
+    @php
+        $robotsContent = [];
+        if (config('seo.robots.index')) $robotsContent[] = 'index';
+        else $robotsContent[] = 'noindex';
+        if (config('seo.robots.follow')) $robotsContent[] = 'follow';
+        else $robotsContent[] = 'nofollow';
+        $robotsContent[] = 'max-image-preview:' . config('seo.robots.max_image_preview');
+        $robotsContent[] = 'max-snippet:' . config('seo.robots.max_snippet');
+        $robotsContent[] = 'max-video-preview:' . config('seo.robots.max_video_preview');
+    @endphp
+    <meta name="robots" content="{{ implode(', ', $robotsContent) }}">
+    <meta name="googlebot" content="{{ config('seo.robots.index') ? 'index' : 'noindex' }}, {{ config('seo.robots.follow') ? 'follow' : 'nofollow' }}">
+    <meta name="language" content="English">
+    <link rel="canonical" href="{{ url()->current() }}">
     
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="{{ $seo['og_type'] ?? 'website' }}">
+    <meta property="og:type" content="{{ $seo['og_type'] ?? config('seo.og.type') }}">
+    <meta property="og:site_name" content="{{ config('seo.site_name') }}">
     <meta property="og:url" content="{{ url()->current() }}">
-    <meta property="og:title" content="{{ $seo['title'] ?? 'Abdulmelik Saylan' }}">
-    <meta property="og:description" content="{{ $seo['description'] ?? '' }}">
-    <meta property="og:image" content="{{ $seo['og_image'] ?? asset('images/abdulmelik_saylan.jpg') }}">
+    <meta property="og:title" content="{{ $seo['title'] ?? config('seo.meta.title') }}">
+    <meta property="og:description" content="{{ $seo['description'] ?? config('seo.meta.description') }}">
+    <meta property="og:image" content="{{ $seo['og_image'] ?? asset(config('seo.og.image')) }}">
+    <meta property="og:image:secure_url" content="{{ secure_asset($seo['og_image'] ?? config('seo.og.image')) }}">
+    <meta property="og:image:width" content="{{ config('seo.og.image_width') }}">
+    <meta property="og:image:height" content="{{ config('seo.og.image_height') }}">
+    <meta property="og:image:alt" content="{{ config('seo.name') }} - {{ config('seo.job_title') }}">
+    <meta property="og:locale" content="{{ config('seo.og.locale') }}">
     
-    <!-- Twitter -->
-    <meta property="twitter:card" content="{{ $seo['twitter_card'] ?? 'summary_large_image' }}">
-    <meta property="twitter:url" content="{{ url()->current() }}">
-    <meta property="twitter:title" content="{{ $seo['title'] ?? '' }}">
-    <meta property="twitter:description" content="{{ $seo['description'] ?? '' }}">
-    <meta property="twitter:image" content="{{ $seo['og_image'] ?? asset('images/abdulmelik_saylan.jpg') }}">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="{{ $seo['twitter_card'] ?? config('seo.twitter.card') }}">
+    <meta name="twitter:site" content="{{ config('seo.twitter.site') }}">
+    <meta name="twitter:creator" content="{{ config('seo.twitter.creator') }}">
+    <meta name="twitter:url" content="{{ url()->current() }}">
+    <meta name="twitter:title" content="{{ $seo['title'] ?? config('seo.meta.title') }}">
+    <meta name="twitter:description" content="{{ $seo['description'] ?? config('seo.meta.description') }}">
+    <meta name="twitter:image" content="{{ $seo['og_image'] ?? asset(config('seo.og.image')) }}">
+    <meta name="twitter:image:alt" content="{{ config('seo.name') }} Portfolio">
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('images/apple-touch-icon.png') }}">
+    <link rel="manifest" href="{{ asset('site.webmanifest') }}">
+    <meta name="theme-color" content="#000000">
     
     <!-- Preconnect for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -41,28 +65,67 @@
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
     
-    <!-- Structured Data for SEO -->
+    <!-- Enhanced Structured Data for SEO -->
+    @if(config('seo.structured_data.enable_person'))
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "Person",
-        "name": "{{ $profile['name'] ?? 'Abdulmelik Saylan' }}",
+        "name": "{{ $profile['name'] ?? config('seo.name') }}",
+        "alternateName": "{{ config('seo.alternate_name') }}",
         "url": "{{ url()->current() }}",
-        "image": "{{ $profile['profileImage'] ?? asset('images/abdulmelik_saylan.jpg') }}",
-        "jobTitle": "{{ $profile['title'] ?? 'Full-Stack Developer' }}",
-        "description": "{{ $profile['bio'] ?? '' }}",
+        "image": "{{ $profile['profileImage'] ?? asset(config('seo.profile_image')) }}",
+        "jobTitle": "{{ $profile['title'] ?? config('seo.job_title') }}",
+        "description": "{{ $profile['bio'] ?? config('seo.bio') }}",
+        "worksFor": {
+            "@type": "Organization",
+            "name": "Freelance"
+        },
         "address": {
             "@type": "PostalAddress",
-            "addressLocality": "{{ $profile['location'] ?? 'Istanbul, Turkey' }}"
+            "addressLocality": "{{ explode(', ', $profile['location'] ?? config('seo.location'))[0] ?? 'Istanbul' }}",
+            "addressCountry": "{{ explode(', ', $profile['location'] ?? config('seo.location'))[1] ?? 'TR' }}"
         },
-        "email": "{{ $profile['email'] ?? 'hello@abdulme.link' }}",
+        "email": "{{ $profile['email'] ?? config('seo.email') }}",
         "sameAs": [
-            "{{ $profile['social']['github']['url'] ?? '' }}",
-            "{{ $profile['social']['linkedin']['url'] ?? '' }}",
-            "{{ $profile['social']['twitter']['url'] ?? '' }}"
-        ]
+            "{{ $profile['social']['github']['url'] ?? config('seo.social.github') }}",
+            "{{ $profile['social']['linkedin']['url'] ?? config('seo.social.linkedin') }}",
+            "{{ $profile['social']['twitter']['url'] ?? config('seo.social.twitter') }}"
+        ],
+        "knowsAbout": @json(config('seo.skills')),
+        "alumniOf": {
+            "@type": "EducationalOrganization",
+            "name": "Software Engineering"
+        }
     }
     </script>
+    @endif
+    
+    @if(config('seo.structured_data.enable_website'))
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "{{ $seo['title'] ?? config('seo.meta.title') }}",
+        "description": "{{ $seo['description'] ?? config('seo.meta.description') }}",
+        "url": "{{ url()->current() }}",
+        "inLanguage": "en-US",
+        "isPartOf": {
+            "@type": "WebSite",
+            "name": "{{ config('seo.site_name') }}",
+            "url": "{{ url('/') }}"
+        },
+        "about": {
+            "@type": "Person",
+            "name": "{{ config('seo.name') }}"
+        },
+        "primaryImageOfPage": {
+            "@type": "ImageObject",
+            "url": "{{ $profile['profileImage'] ?? asset(config('seo.profile_image')) }}"
+        }
+    }
+    </script>
+    @endif
 </head>
 <body class="landing-page">
     
@@ -85,8 +148,8 @@
                 <div class="profile-wrapper" data-aos="fade-up">
                     <div class="profile-image-container">
                         <img 
-                            src="{{ $profile['profileImage'] ?? asset('images/abdulmelik_saylan.jpg') }}" 
-                            alt="{{ $profile['name'] ?? 'Profile' }}"
+                            src="{{ $profile['profileImage'] ?? asset(config('seo.profile_image')) }}" 
+                            alt="{{ $profile['name'] ?? config('seo.name') }}"
                             class="profile-image"
                             loading="eager"
                         >
@@ -96,9 +159,9 @@
                 
                 <!-- Hero text -->
                 <div class="hero-text" data-aos="fade-up" data-aos-delay="100">
-                    <h1 class="hero-name">{{ $profile['name'] ?? 'Abdulmelik Saylan' }}</h1>
-                    <p class="hero-title">{{ $profile['title'] ?? 'Full-Stack Developer' }}</p>
-                    <p class="hero-tagline">{{ $profile['tagline'] ?? 'Building the future, one pixel at a time' }}</p>
+                    <h1 class="hero-name">{{ $profile['name'] ?? config('seo.name') }}</h1>
+                    <p class="hero-title">{{ $profile['title'] ?? config('seo.job_title') }}</p>
+                    <p class="hero-tagline">{{ $profile['tagline'] ?? config('seo.site_tagline') }}</p>
                 </div>
                 
                 <!-- Stats -->
@@ -257,8 +320,8 @@
     
     <!-- Footer -->
     <footer class="landing-footer">
-        <p>&copy; {{ date('Y') }} {{ $profile['name'] ?? 'Abdulmelik Saylan' }}. All rights reserved.</p>
-        <p class="footer-hint">Built with ❤️ using Laravel & Vanilla JS</p>
+        <p>&copy; {{ date('Y') }} {{ $profile['name'] ?? config('seo.name') }}. All rights reserved.</p>
+        <p class="footer-hint">{{ config('seo.footer_text', 'Built with passion and attention to detail') }}</p>
     </footer>
     
     <!-- JavaScript (Progressive Enhancement) -->
