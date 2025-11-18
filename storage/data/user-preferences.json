@@ -2,12 +2,12 @@
     "desktop": {
         "wallpaper": {
             "current_id": "big-sur",
-            "last_updated": "2025-11-17T22:00:46.940956Z"
+            "last_updated": "2025-11-18T13:07:47.731641Z"
         }
     },
     "_metadata": {
-        "source": "supabase",
-        "timestamp": "2025-10-30T10:43:17+00:00",
-        "cached": false
+        "source": "local",
+        "timestamp": "2025-11-18T13:07:47+00:00",
+        "file_path": "C:\\Users\\LENOVOO\\Documents\\coding\\abdulme.link\\storage\\data/user-preferences.json"
     }
 }
